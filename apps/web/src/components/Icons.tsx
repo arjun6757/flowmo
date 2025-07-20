@@ -188,3 +188,33 @@ export function RightArrow({ fill }: { fill: string }) {
     </svg>
   );
 }
+
+export function Pencil({ fill }: { fill: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      fill={fill}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <use href="/icons.svg#pencilIcon" />
+    </svg>
+  );
+}
+
+export function Done({ fill }: { fill: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      fill={fill}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <use href="/icons.svg#doneIcon" />
+    </svg>
+  )
+}

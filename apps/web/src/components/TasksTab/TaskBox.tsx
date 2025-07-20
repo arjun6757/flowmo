@@ -6,20 +6,23 @@ import { toast } from 'sonner';
 import {
   useActiveList,
   useFocusingTask,
+  useModifyingTask,
   useTasksActions,
 } from '@/hooks/useTasks';
 import { useMode, useStatus } from '@/hooks/useTimer';
-import { Calendar, Label, TrashCan } from '../Icons';
+import { Calendar, Label, Pencil, TrashCan } from '../Icons';
 
 export default function TaskBox({ task }: { task: Task }) {
   const [isLoading, startTransition] = useTransition();
   const status = useStatus();
   const mode = useMode();
   const focusingTask = useFocusingTask();
+  const modifyingTask = useModifyingTask();
   const { deleteTask, completeTask, undoCompleteTask } = useTasksActions();
-  const { focusTask, unfocusTask } = useTasksActions();
+  const { focusTask, unfocusTask, modifyTask, unmodifyTask } = useTasksActions();
   const activeList = useActiveList();
   const isFocusing = task.id === focusingTask?.id;
+  const isModifying = task.id === modifyingTask?.id;
 
   return (
     <div
@@ -78,19 +81,37 @@ export default function TaskBox({ task }: { task: Task }) {
           ) : null}
         </div>
       </div>
-      <button
-        type="button"
-        aria-label="Delete task"
-        className="absolute right-1 hidden fill-primary group-hover:block"
-        onClick={(e) => {
-          startTransition(async () => {
-            await deleteTask(task);
-          });
-          e.stopPropagation();
-        }}
-      >
-        <TrashCan />
-      </button>
+      
+      <div className='absolute right-1 gap-4 hidden group-hover:flex'>
+        <button
+          type='button'
+          aria-label="Edit task"
+          className='fill-primary'
+          onClick={(e) => {
+            e.stopPropagation();
+            if(isModifying){
+              unmodifyTask(task)
+            } else {
+              modifyTask(task)
+            }
+          }}
+        >
+          <Pencil fill='#FFFFFA0' />
+        </button>
+        <button
+          type="button"
+          aria-label="Delete task"
+          className='fill-primary'
+          onClick={(e) => {
+            startTransition(async () => {
+              await deleteTask(task);
+            });
+            e.stopPropagation();
+          }}
+        >
+          <TrashCan />
+        </button>
+      </div>
     </div>
   );
 }

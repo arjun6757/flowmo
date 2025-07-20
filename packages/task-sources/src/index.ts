@@ -24,6 +24,7 @@ export interface TaskSource {
       label?: string;
     },
   ): Promise<Task>;
+  editTask(taskId: string, name: string, listId?: string): Promise<void>;
   deleteTask(taskId: string, listId?: string): Promise<void>;
   completeTask(taskId: string, listId?: string): Promise<void>;
   undoCompleteTask(taskId: string, listId: string | null): Promise<void>;

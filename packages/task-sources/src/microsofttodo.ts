@@ -132,6 +132,10 @@ export default class MicrosoftToDoSource implements TaskSource {
     };
   }
 
+  async editTask(taskId: string, name: string, listId?: string): Promise<void> {
+    // TODO
+  }
+
   async deleteTask(taskId: string, listId: string): Promise<void> {
     const accessToken = await this.getAccessToken();
 

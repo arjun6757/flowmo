@@ -40,6 +40,20 @@ export default class FlowmoSource implements TaskSource {
     };
   }
 
+  async editTask(taskId: string, name: string, listId?: string): Promise<void> {
+    const { data: { session } } = await this.supabase.auth.getSession()
+    
+    if(!session) return;
+
+    const { error } = await this.supabase
+    .from('tasks')
+    .update({
+      name,
+    }).eq('id', taskId);
+
+    if(error) throw error;
+  }
+
   async deleteTask(taskId: string): Promise<void> {
     const {
       data: { session },

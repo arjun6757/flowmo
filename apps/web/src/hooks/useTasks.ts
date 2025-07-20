@@ -15,5 +15,6 @@ export const {
   useActiveLabel,
   useTasksActions,
   useTasks,
+  useModifyingTask,
   useSupportsLabels,
 } = createHooks(store);

@@ -31,12 +31,16 @@ interface State {
   labels: string[];
   tasksAbortController: AbortController | null;
   sourceInstance: TaskSource;
+  modifyingTask: Task | null
 }
 
 interface Action {
   addTask: (name: string) => Promise<void>;
   deleteTask: (task: Task) => Promise<void>;
   completeTask: (task: Task) => Promise<void>;
+  setTask: (task: Task) => Promise<void>;
+  modifyTask: (task: Task) => void;
+  unmodifyTask: (task: Task) => void;
   undoCompleteTask: (task: Task, listId: string | null) => Promise<void>;
   fetchSources: () => Promise<void>;
   fetchLists: () => Promise<void>;
@@ -68,6 +72,7 @@ export const createStore = (
     lists: [],
     isLoadingLists: true,
     isLoadingLabels: false,
+    modifyingTask: null,
     activeLabel: '',
     labels: [],
     tasksAbortController: null,
@@ -85,6 +90,19 @@ export const createStore = (
           set({ tasks: [...tasks, task] });
         } catch (error) {
           onError('Failed to add task');
+        }
+      },
+      setTask: async (task) => {
+        try {
+          const { sourceInstance, activeList } = get()
+          await sourceInstance.editTask(task.id, task.name, activeList ?? undefined)
+
+          set((state) => ({
+            tasks: state.tasks.map(t => t.id === task.id ? task : t)
+          }))
+
+        } catch(error) {
+          onError('Failed to edit task')
         }
       },
       deleteTask: async (task) => {
@@ -198,6 +216,8 @@ export const createStore = (
         }
       },
       focusTask: (task) => set({ focusingTask: task }),
+      modifyTask: (task) => set({ modifyingTask: task }),
+      unmodifyTask: () => set({ modifyingTask: null }),
       unfocusTask: () => set({ focusingTask: null }),
       fetchTasks: async () => {
         try {
@@ -278,6 +298,7 @@ export const createHooks = (useStore: ReturnType<typeof createStore>) => ({
   useIsLoadingSources: () => useStore((s) => s.isLoadingSources),
   useLists: () => useStore((s) => s.lists),
   useFocusingTask: () => useStore((s) => s.focusingTask),
+  useModifyingTask: () => useStore((s) => s.modifyingTask),
   useIsLoadingTasks: () => useStore((s) => s.isLoadingTasks),
   useActiveList: () => useStore((s) => s.activeList),
   useIsLoadingLists: () => useStore((s) => s.isLoadingLists),

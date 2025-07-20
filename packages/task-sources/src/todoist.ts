@@ -58,6 +58,10 @@ export default class TodoistSource implements TaskSource {
     };
   }
 
+  async editTask(taskId: string, name: string, listId?: string): Promise<void> {
+    // TODO
+  }
+
   async deleteTask(taskId: string): Promise<void> {
     const token = await this.getAccessToken();
     const response = await fetch(
