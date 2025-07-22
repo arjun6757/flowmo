@@ -218,3 +218,18 @@ export function Done({ fill }: { fill: string }) {
     </svg>
   )
 }
+
+export function Cancel({ fill }: { fill: string }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      fill={fill}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <use href="/icons.svg#cancelIcon" />
+    </svg>
+  )
+}

@@ -128,7 +128,21 @@ export default class GoogleTasksSource implements TaskSource {
   }
 
   async editTask(taskId: string, name: string, listId?: string): Promise<void> {
-    // TODO
+    const accessToken = await this.getAccessToken();
+
+    const response = await this.makeRequest(
+      `${this.baseUrl}/lists/${listId}/tasks/${taskId}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if(!response.ok) {
+      throw new Error('Failed to edit task');
+    }
   }
 
   async deleteTask(taskId: string, listId: string): Promise<void> {

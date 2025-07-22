@@ -95,8 +95,9 @@ export const createStore = (
       setTask: async (task) => {
         try {
           const { sourceInstance, activeList } = get()
+          
           await sourceInstance.editTask(task.id, task.name, activeList ?? undefined)
-
+          
           set((state) => ({
             tasks: state.tasks.map(t => t.id === task.id ? task : t)
           }))

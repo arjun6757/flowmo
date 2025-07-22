@@ -3,7 +3,7 @@
 import { Button } from '@heroui/button';
 import { Input } from '@heroui/input';
 import { useEffect, useRef, useState } from 'react';
-import { Done, Plus } from '@/components/Icons';
+import { Cancel, Done, Plus } from '@/components/Icons';
 import { useModifyingTask, useTasksActions } from '@/hooks/useTasks';
 
 export default function Toolbar() {
@@ -21,7 +21,7 @@ export default function Toolbar() {
   };
 
   const onSetTask = () => {
-    if(!modifyingTask) return;
+    if (!modifyingTask) return;
     setTask({ ...modifyingTask, name: inputValue.trim() });
     setIsModifying(false);
     setInputValue('');
@@ -31,14 +31,14 @@ export default function Toolbar() {
     if (modifyingTask) {
       setIsModifying(true)
       setInputValue(modifyingTask.name);
-      
+
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus()
           inputRef.current.setSelectionRange(modifyingTask.name.length, modifyingTask.name.length)
           inputRef.current.scrollLeft = inputRef.current.scrollWidth
         }
-      }, 100) 
+      }, 100)
     }
   }, [modifyingTask])
 
@@ -73,17 +73,32 @@ export default function Toolbar() {
         }}
       />
       {isModifying ? (
-        <Button
-          type="button"
-          variant="flat"
-          radius="sm"
-          isIconOnly
-          onPress={onSetTask}
-          isDisabled={isDisabled}
-          className="bg-secondary fill-white"
-        >
-          <Done fill='white' />
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            type="button"
+            variant="flat"
+            radius="sm"
+            isIconOnly
+            onPress={() => {
+              setIsModifying(false);
+              setInputValue('');
+            }}
+            className="bg-secondary fill-white"
+          >
+            <Cancel fill='white' />
+          </Button>
+          <Button
+            type="button"
+            variant="flat"
+            radius="sm"
+            isIconOnly
+            onPress={onSetTask}
+            isDisabled={isDisabled}
+            className="bg-secondary fill-white"
+          >
+            <Done fill='white' />
+          </Button>
+        </div>
       ) : (
         <Button
           type="button"

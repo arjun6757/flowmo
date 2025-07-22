@@ -53,7 +53,23 @@ export default class TickTickSource implements TaskSource {
   }
 
   async editTask(taskId: string, name: string, listId?: string): Promise<void> {
-    // TODO
+    const accessToken = await this.getAccessToken();
+
+    const response = await fetch(`https://api.ticktick.com/open/v1/task/${taskId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        id: taskId,
+        projectId: listId,
+        title: name
+      }),
+    });
+
+    if(!response.ok){
+      throw new Error('Failed to edit task');
+    }
   }
 
   async deleteTask(taskId: string, listId: string): Promise<void> {

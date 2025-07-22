@@ -133,7 +133,24 @@ export default class MicrosoftToDoSource implements TaskSource {
   }
 
   async editTask(taskId: string, name: string, listId?: string): Promise<void> {
-    // TODO
+    const accessToken = await this.getAccessToken();
+
+    const response = await this.makeRequest(
+      `${this.baseUrl}/lists/${listId}/tasks/${taskId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          title: name
+        })
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to edit task');
+    }
   }
 
   async deleteTask(taskId: string, listId: string): Promise<void> {

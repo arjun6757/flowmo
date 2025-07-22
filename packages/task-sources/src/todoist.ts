@@ -59,7 +59,23 @@ export default class TodoistSource implements TaskSource {
   }
 
   async editTask(taskId: string, name: string, listId?: string): Promise<void> {
-    // TODO
+    const token = await this.getAccessToken();
+    const response = await fetch(
+      `https://api.todoist.com/rest/v2/tasks/${taskId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: name
+        }),
+      }
+    )
+
+    if(!response.ok) {
+      throw new Error("Failed to edit task")
+    }
   }
 
   async deleteTask(taskId: string): Promise<void> {
